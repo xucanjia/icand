@@ -11,7 +11,7 @@
  Target Server Version : 100113
  File Encoding         : utf-8
 
- Date: 12/16/2016 17:38:07 PM
+ Date: 12/16/2016 18:33:32 PM
 */
 
 SET NAMES utf8mb4;
@@ -52,6 +52,13 @@ CREATE TABLE `user` (
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `password_reset_token` (`password_reset_token`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+--  Records of `user`
+-- ----------------------------
+BEGIN;
+INSERT INTO `user` VALUES ('1', 'canjia', 'cmdDSH9Wsx407YEqSvCZyp64EXLK9nhd', '$2y$13$QXZj40WSUL0O15vSHqNi4.Zi2gszSvpFeLjtYTZ9hzEDO3Wlf0DY.', null, '327083961@qq.com', '10', '1481882842', '1481882842');
+COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
