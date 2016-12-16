@@ -39,6 +39,7 @@ class ContactForm extends Model
     {
         return [
             'verifyCode' => 'Verification Code',
+            'name' => '姓名',
         ];
     }
 
