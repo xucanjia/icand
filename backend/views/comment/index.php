@@ -26,16 +26,22 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             // 'content:ntext',
+            // 替换长文本
+            // 方法一 缺点 繁琐 不利于后期修改
+            // [
+            //     'attribute'=>'content',
+            //     'value'=>function($model){ // 参数($model, $key, $index, $column) $model当前行的数据对象 $key当前行的键 $index当前行的索引 $column数据列对象
+            //         $tempStr = strip_tags($model->content);
+
+            //         $s = (mb_strlen($tempStr)>20)?'...':'';
+            //         return mb_substr($tempStr,0,20,'utf-8').$s;
+            //     }
+            // ],
+
+            // 方法二
             [
-                'attribute'=>'content',
-                'value'=>function($model){
-                    $tempStr = strip_tags($model->content);
-                    $tempLen = mb_strlen($tempStr);
-
-                    return mb_substr($tempStr,0,20,'utf-8').($tempLen>20)?'...':$tempLen;
-                }
-
-
+                'attribute' => 'content',
+                'value' => 'beginning', //model 中的getbeginning
             ],
             'status',
             'create_time:datetime',
