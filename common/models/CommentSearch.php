@@ -12,6 +12,11 @@ use common\models\Comment;
  */
 class CommentSearch extends Comment
 {
+    public function attributes()
+    {
+        // return array_merge(parent::attributes(),['user.username'],['post.title']);
+        return array_merge(parent::attributes(),['user.username']);
+    }
     /**
      * @inheritdoc
      */
@@ -19,7 +24,8 @@ class CommentSearch extends Comment
     {
         return [
             [['id', 'status', 'create_time', 'userid', 'post_id'], 'integer'],
-            [['content', 'email', 'url'], 'safe'],
+            [['content', 'email', 'url','user.username'], 'safe'],
+            // [['content', 'email', 'url','user.username','post.title'], 'safe'],
         ];
     }
 
@@ -70,6 +76,56 @@ class CommentSearch extends Comment
             ->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['like', 'url', $this->url]);
 
+
+
+
+        // // 搜索作者
+        // $query->join('INNER JOIN','user','comment.userid = user.id');
+        // $query->andFilterWhere(['like','user.username',$this->getAttribute('user.username')]);
+
+        // $dataProvider->sort->attributes['user.username'] =
+        // [
+        //     'asc'=>['user.username'=>SORT_ASC],
+        //     'desc'=>['user.username'=>SORT_DESC],
+        // ];
+
+            $query->join('INNER JOIN','user','comment.userid = user.id');
+        $query->andFilterWhere(['like','user.username',$this->getAttribute('user.username')]);
+
+        $dataProvider->sort->attributes['user.username'] =
+        [
+                'asc'=>['user.username'=>SORT_ASC],
+                'desc'=>['user.username'=>SORT_DESC],
+        ];
+
+        $dataProvider->sort->defaultOrder =
+        [
+                'status'=>SORT_ASC,
+                'id'=>SORT_DESC,
+        ];
+
+
+        // // 搜索文章标题
+        // $query->join('INNER JOIN','post','comment.post_id = post.id');
+        // $query->andFilterWhere(['like','post.title',$this->getAttribute('post.title')]);
+        // $dataProvider->sort->attributes['post.title'] =
+        // [
+        //     'asc'=>SORT_ASC,
+        //     'desc'=>SORT_DESC,
+        // ];
+
+        // $dataProvider->sort->defaultOrder=
+        // [
+        //     'status'=>SORT_ASC,
+        //     'id'=>SORT_DESC,
+        // ];
         return $dataProvider;
     }
+
+
+
+
+
+
+
 }

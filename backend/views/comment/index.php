@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use common\models\Commentstatus;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\CommentSearch */
@@ -22,9 +23,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            // ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            // 'id',
+            ['attribute'=>'id',
+             'contentOptions'=>['width'=>'30px'],
+            ],
             // 'content:ntext',
             // 替换长文本
             // 方法一 缺点 繁琐 不利于后期修改
@@ -43,14 +47,58 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'content',
                 'value' => 'beginning', //model 中的getbeginning
             ],
-            'status',
-            'create_time:datetime',
-            'userid',
+            // 'status',
+            [
+                'attribute' => 'status',
+                'value'     => 'status0.name',
+                'filter'    => CommentStatus::find()
+                               ->select(['name','id'])
+                               ->orderBy('position')
+                               ->indexBy('id')
+                               ->column(),
+                'contentOptions'=>
+                    function ($model)
+                    {
+                        return ($model->status==1)?['class'=>'bg-danger']:[];
+                    }
+            ],
+            // 'create_time:datetime',
+            [
+                'attribute'=>'create_time',
+                'format'=>['date','php: Y-m-d H:i:s'],
+            ],
+            // 'userid',
+            [
+                'attribute'=>'user.username',
+                'label'=>'作者',
+                'value'=>'user.username'
+            ],
             // 'email:email',
             // 'url:url',
             // 'post_id',
+            // 'post.title',
+            [
+                'attribute'=>'post.title',
+                'value'=>'post.title',
+            ],
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+             // 'template'=>'{view} {update} {delete} {approve}',
+             // 'buttons'=>
+             // [
+             //    'approve'=>function($url,$model,$key)
+             //               {
+             //                $options=[
+             //                    'title'=>Yii::t('yii','审核'),
+             //                    'aria-label'=>Yii::t('yii','审核'),
+             //                    'data-confirm'=>Yii::t('yii','你确定通过这条评论吗?'),
+             //                    'data-method'=>'post',
+             //                    'data-pjax'=>'0',
+             //                ];
+             //                return Html::a('<span class="glyphicon"></span>');
+             //               }
+             // ],
+            ],
         ],
     ]); ?>
 </div>
