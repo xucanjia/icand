@@ -55,10 +55,10 @@ class Comment extends \yii\db\ActiveRecord
             'id' => 'ID',
             'content' => '内容',
             'status' => '状态',
-            'create_time' => '创建时间',
-            'userid' => '用户',
-            'email' => 'Email',
-            'url' => 'Url',
+            'create_time' => '修改时间',
+            'userid' => '作者',
+            'email' => '邮箱',
+            'url' => '链接',
             'post_id' => '文章',
         ];
     }
@@ -89,16 +89,35 @@ class Comment extends \yii\db\ActiveRecord
 
     public function getBeginning()
     {
-        $tmpStr = strip_tags($this->content);
-        $tmpLen = mb_strlen($tmpStr);
+        $stmStr = strip_tags($this->content);
+        $stmLen = mb_strlen($stmStr);
 
-        return mb_substr($tmpStr,0,20,'utf-8').(($tmpLen>20)?'...':'');
+        return mb_substr($stmStr,0,15,'utf-8').($stmLen>15?'...':'');
     }
 
+    public function approve()
+    {
+        $this->status = 2;
+        return ($this->save()?true:false);
+    }
 
+    public static function getPengingCommentCount()
+    {
+        return Comment::find()->where(['status'=>1])->count();
+    }
 
-
-
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert))
+        {
+            if ($insert)
+            {
+                $this->create_time = time();
+            }
+            return true;
+        }
+        else return false;
+    }
 
 
 
