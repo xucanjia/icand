@@ -5,9 +5,9 @@ use Yii;
 use yii\base\Model;
 
 /**
- * Login form
+ * AdminLoginForm form
  */
-class LoginForm extends Model
+class AdminLoginForm extends Model
 {
     public $username;
     public $password;
@@ -30,6 +30,14 @@ class LoginForm extends Model
             ['password', 'validatePassword'],
         ];
     }
+    public function attributes()
+    {
+        return [
+            'username'=>'用户名',
+            'password'=>'密码',
+            'rememberMe'=>'记住密码',
+        ];
+    }
 
     /**
      * Validates the password.
@@ -43,7 +51,7 @@ class LoginForm extends Model
         if (!$this->hasErrors()) {
             $user = $this->getUser();
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+                $this->addError($attribute, '请输入正确的用户名和密码');
             }
         }
     }
@@ -70,7 +78,7 @@ class LoginForm extends Model
     protected function getUser()
     {
         if ($this->_user === null) {
-            $this->_user = User::findByUsername($this->username);
+            $this->_user = Adminuser::findByUsername($this->username);
         }
 
         return $this->_user;

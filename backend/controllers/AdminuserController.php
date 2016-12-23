@@ -8,6 +8,8 @@ use common\models\AdminuserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use backend\models\SignupForm;
+use backend\models\ResetpwdForm;
 
 /**
  * AdminuserController implements the CRUD actions for Adminuser model.
@@ -63,15 +65,20 @@ class AdminuserController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Adminuser();
+        $model = new SignupForm();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
+        if ($model->load(Yii::$app->request->post()))
+        {
+            if ($user = $model->signup())
+            {
+                $this->redirect(['view','id'=>$user->id]);
+            }
+        }
+
+        return $this->render('create', [
                 'model' => $model,
             ]);
-        }
+
     }
 
     /**
@@ -121,4 +128,24 @@ class AdminuserController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+
+    public function actionResetpwd($id)
+    {
+        $model = new ResetpwdForm();
+
+        if ($model->load(Yii::$app->request->post()))
+        {
+            if ($user = $model->resetPassword($id))
+            {
+                $this->redirect(['view','id'=>$user->id]);
+            }
+        }
+
+        return $this->render('resetpwd', [
+                'model' => $model,
+            ]);
+
+    }
+
 }
