@@ -136,9 +136,9 @@ class AdminuserController extends Controller
 
         if ($model->load(Yii::$app->request->post()))
         {
-            if ($user = $model->resetPassword($id))
+            if ($model->resetPassword($id))
             {
-                $this->redirect(['view','id'=>$user->id]);
+                $this->redirect(['view']);
             }
         }
 

@@ -8,6 +8,7 @@ use common\models\PostSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * PostController implements the CRUD actions for Post model.
@@ -20,12 +21,31 @@ class PostController extends Controller
     public function behaviors()
     {
         return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
+                'verbs' =>
+                [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['POST'],
+                    ],
                 ],
-            ],
+
+                'access' =>
+                [
+                    'class'=>AccessControl::className(),
+                    'rules'=>
+                    [
+                        [
+                            'actions'=>['index','view'],// 能访问的界面
+                            'allow'=>true,
+                            'roles'=>['?'], //?代表游客
+                        ],
+                        [
+                            'actions'=>['index','view','create','update'],
+                            'allow'=>true,
+                            'roles'=>['@'],// @代表用户
+                        ],
+                    ],
+                ],
         ];
     }
 

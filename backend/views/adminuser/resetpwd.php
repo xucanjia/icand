@@ -24,10 +24,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $form->field($model, 'password_repeat')->passwordInput(['maxlength' => true]) ?>
 
-
-
-
-
     <div class="form-group">
         <?= Html::submitButton('重置' ,['class' => 'btn btn-primary']) ?>
     </div>

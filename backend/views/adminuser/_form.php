@@ -12,21 +12,11 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
-
     <?= $form->field($model, 'nickname')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'password_repeat')->passwordInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'profile')->textarea(['rows' => 6]) ?>
-        <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
 
 
     <div class="form-group">

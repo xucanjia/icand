@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model common\models\Adminuser */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Adminusers', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => '管理员', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="adminuser-view">
@@ -15,8 +15,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a('修改', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('删除', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => '确定删除吗?',
@@ -31,12 +31,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'username',
             'nickname',
-            'password',
+
             'email:email',
             'profile:ntext',
-            'auth_key',
-            'password_hash',
-            'password_reset_token',
+
         ],
     ]) ?>
 

@@ -212,7 +212,10 @@ class User extends ActiveRecord implements IdentityInterface
 
    public function allStatus()
    {
-        return [self::STATUS_ACTIVE=>'正常',self::STATUS_DELETED=>'已删除',];
+        return [
+                self::STATUS_ACTIVE=>'正常',
+                self::STATUS_DELETED=>'已删除',
+               ];
    }
 
    public function getStatusStr()

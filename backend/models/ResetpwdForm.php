@@ -52,6 +52,6 @@ class ResetpwdForm extends Model
 
         $admuser->setPassword($this->password);
 
-        return $admuser->save() ? $admuser : null;
+        return $admuser->save() ? true : false;
     }
 }
