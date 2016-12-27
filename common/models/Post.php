@@ -124,4 +124,18 @@ class Post extends \yii\db\ActiveRecord
         parent::afterDelete();
         Tag::updateFrequency($this->tags,'');
     }
+
+    public function getUrl()
+    {
+        return Yii::$app->urlManager->createUrl(['post\dedail','id'=>$this->id,'title'=>$this->title]);
+    }
+
+    public function getBeginning($length=288)
+    {
+        $tmpStr = strip_tags($this->content);
+        $tmpLen = mb_strlen($tmpStr);
+
+        $tmpStr = mb_substr($tmpStr, 0, $length, 'utf-8');
+        return $tmpStr.($tmpLen>$length?'...':'');
+    }
 }
