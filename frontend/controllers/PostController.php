@@ -8,6 +8,10 @@ use common\models\PostSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\models\Tag;
+use common\models\Comment;
+
+
 
 /**
  * PostController implements the CRUD actions for Post model.
@@ -35,12 +39,18 @@ class PostController extends Controller
      */
     public function actionIndex()
     {
+        $tags = Tag::findTagWeights();
+
+        $recentComments = Comment::findRecentComments();
+
         $searchModel = new PostSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'tags' => $tags,
+            'recentComments' => $recentComments,
         ]);
     }
 
@@ -120,5 +130,31 @@ class PostController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionDetail()
+    {
+        // step1 准备数据模型
+        $model = $this->findModel($id);
+        $tags = Tag::findTagWeights();
+        $recentComments = Comment::findRecentComments();
+        $userMe = User::findOne(Yii::$app->user->id);
+        $commentModel = new Comment();
+        $commentModel->email = $userMe->email;
+        $commentModel->userid = $userMe->id;
+
+        // step2 当评论提交时,处理评论
+        if ($commentModel->load(Yii::$app->request->post()))
+        {
+            # code...
+        }
+
+        // step3 传数据给视图渲染
+        return $this->render('detail', [
+                    'model'=>$model,
+                    'tags'=>$tags,
+                    'recentComments'=>$recentComments,
+                    'commentModel'=>$commentModel,
+            ]);
     }
 }

@@ -22,7 +22,8 @@ use frontend\components\RctReplayWidget;
         <div class='col-md-9'>
             <ol class="breadcrumb">
                 <li><a href="<?= Yii::$app->HomeUrl; ?>">首页</a></li>
-                <li>文章列表</li>
+                <li><a href="<?= Yii::$app->HomeUrl; ?>?r=post/index">文章列表</a></li>
+                <li class="active"><?= $model->title; ?></li>
             </ol>
             <?= ListView::widget(
                  [
