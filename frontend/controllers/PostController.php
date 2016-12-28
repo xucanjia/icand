@@ -8,8 +8,11 @@ use common\models\PostSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
 use common\models\Tag;
 use common\models\Comment;
+use common\models\User;
+
 
 
 
@@ -18,6 +21,7 @@ use common\models\Comment;
  */
 class PostController extends Controller
 {
+    public $added = 0; // 0代表还没有新评论
     /**
      * @inheritdoc
      */
@@ -132,21 +136,32 @@ class PostController extends Controller
         }
     }
 
-    public function actionDetail()
+    public function actionDetail($id)
     {
         // step1 准备数据模型
         $model = $this->findModel($id);
         $tags = Tag::findTagWeights();
         $recentComments = Comment::findRecentComments();
+
         $userMe = User::findOne(Yii::$app->user->id);
+        // echo "<pre>";
+        // var_dump($userMe);
+        // exit;
         $commentModel = new Comment();
         $commentModel->email = $userMe->email;
         $commentModel->userid = $userMe->id;
 
+
+
+
         // step2 当评论提交时,处理评论
         if ($commentModel->load(Yii::$app->request->post()))
         {
-            # code...
+            $commentModel->status = 1;
+            $commentModel->post_id = $id;
+            if ($commentModel->save()) {
+                $this->added = 1;
+            }
         }
 
         // step3 传数据给视图渲染
@@ -155,6 +170,7 @@ class PostController extends Controller
                     'tags'=>$tags,
                     'recentComments'=>$recentComments,
                     'commentModel'=>$commentModel,
+                    'added'=>$this->added,
             ]);
     }
 }

@@ -1,10 +1,12 @@
 <?php
 
+// use Yii;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\ListView;
 use frontend\components\TagsCloudWidgets;
 use frontend\components\RctReplayWidget;
+use common\models\Post;
 
 
 
@@ -44,6 +46,20 @@ use frontend\components\RctReplayWidget;
                 <ul class="list-group">
                     <li class="list-group-item">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>查找文章
+                        <!-- 缓存 -->
+                        <?php
+
+                                //  $data = Post::find()->count();
+                                // sleep(5);
+                            $data = Yii::$app->cache->get('postCount');
+                            if ($data === false) {
+                                $data = Post::find()->count();
+                                sleep(5);
+                                Yii::$app->cache->set('postCount',$data);
+                            }
+
+                            echo '('.$data.')';
+                        ?>
                     </li>
                     <li class="list-group-item">
                         <form class="form-inline" action="index.php?r=post/index" id="w0" method="get">

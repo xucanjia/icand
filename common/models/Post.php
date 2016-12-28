@@ -73,6 +73,12 @@ class Post extends \yii\db\ActiveRecord
         return $this->hasMany(Comment::className(), ['post_id' => 'id']);
     }
 
+    public function getActiveComment()
+    {
+        return $this->hasMany(Comment::className(), ['post_id' => 'id'])
+        ->where(':status',[':status=>2'])->orderBy('id DESC');
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -129,7 +135,7 @@ class Post extends \yii\db\ActiveRecord
 
     public function getUrl()
     {
-        return Yii::$app->urlManager->createUrl(['post\dedail','id'=>$this->id,'title'=>$this->title]);
+        return Yii::$app->urlManager->createUrl(['post/detail','id'=>$this->id,'title'=>$this->title]);
     }
 
     public function getBeginning($length=288)

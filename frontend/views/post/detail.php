@@ -5,6 +5,8 @@ use yii\grid\GridView;
 use yii\widgets\ListView;
 use frontend\components\TagsCloudWidgets;
 use frontend\components\RctReplayWidget;
+use yii\helpers\HtmlPurifier;
+use common\models\Comment;
 
 
 
@@ -25,18 +27,53 @@ use frontend\components\RctReplayWidget;
                 <li><a href="<?= Yii::$app->HomeUrl; ?>?r=post/index">文章列表</a></li>
                 <li class="active"><?= $model->title; ?></li>
             </ol>
-            <?= ListView::widget(
-                 [
-                    'id' => 'postList',
-                    'dataProvider' => $dataProvider,
-                    'itemView' => '_listitem', // 子视图,显示一篇文章的的标题内容
-                    'pager' => [
-                                'maxButtonCount' => 10,
-                                'nextPageLabel'  => Yii::t('app', '下一页'),
-                                'prevPageLabel'  => Yii::t('app', '上一页'),
-                               ],
-                 ]
-            )?>
+            <div class="post">
+                <h2><a href="<?= $model->url; ?>"><?= Html::encode($model->title); ?></h2>
+            </div>
+            <div class="author">
+                <span class="glyphicon glyphicon-time" aria-hidden="true"></span><em>
+                <?= date('Y-m-d H:i:s',$model->create_time); ?></em>
+
+                <span class="glyphicon glyphicon-user" aria-hidden="true"></span><em>
+                <?= Html::encode($model->author->username); ?></em>
+            </div>
+            <br>
+            <div class="content">
+                <?= HTMLPurifier::process($model->content); ?>
+            </div>
+            <br>
+            <!-- 文章标签 -->
+            <div class="nav">
+                <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
+                <?= implode(',' ,$model->tagLinks); ?>
+                <br>
+                <?= Html::a("评论 ({$model->commentCount})",$model->url.'#comments') ?>
+                | 最后更新于 <?= date('Y-m-d', $model->update_time) ?>
+            </div>
+            <div id="comments">
+                <?php if ($added) { ?>
+                    <div class="alert alert-warning alert-dismissible" role="alert">
+                      <h4>感谢你的回复,我们会尽快通过审核发布!</h4>
+
+                      <p><?= nl2br($commentModel->content) ?></p>
+                      <button type="button" class="close" data-dismiss="alert">
+                      <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                      </button>
+                      <strong>Warning!</strong> Better check yourself, you're not looking too good.
+                    </div>
+                <?php } ?>
+
+                <?php if($model->commentCount >= 1) : ?>
+                    <h5><?= $model->commentCount.'条评论'; ?></h5>
+                    <?= $this->render('_comment',array('post'=>$model,'comments'=>$model->activeComments)) ?>
+                <?php endif; ?>
+                <br>
+                <h4>发表评论</h4>
+                <?php
+                    $postComment = new Comment();
+                    echo $this->render('_guestform',array('id'=>$model->id,'commentModel'=>$commentModel));
+                ?>
+            </div>
         </div>
 
         <!-- 右侧内容 -->
